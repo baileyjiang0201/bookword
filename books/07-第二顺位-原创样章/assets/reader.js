@@ -7,6 +7,14 @@ const pronunciationAudio = new Audio();
 const silentAudioSrc = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=";
 const englishVoicePattern = /en(-|_|$)/i;
 const audioWarmers = new Map();
+const chapterExerciseState = {
+  total: 0,
+  completed: 0,
+  celebrationShown: false,
+  celebration: null,
+  celebrationTimer: null,
+  paneStates: [],
+};
 
 let activeNode = null;
 let audioUnlocked = false;
@@ -148,6 +156,69 @@ function injectExerciseStyles() {
       color: #245334;
       font-weight: 700;
     }
+    .chapter-celebration {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: min(360px, calc(100vw - 24px));
+      opacity: 0;
+      transform: translateY(14px) scale(0.98);
+      pointer-events: none;
+      transition: opacity .24s ease, transform .24s ease;
+    }
+    .chapter-celebration.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .chapter-celebration-card {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at top left, rgba(255, 250, 239, 0.96), transparent 38%),
+        linear-gradient(140deg, rgba(255, 250, 242, 0.98), rgba(246, 235, 220, 0.98));
+      border: 1px solid rgba(117, 86, 58, 0.14);
+      box-shadow: 0 18px 38px rgba(52, 33, 14, 0.18);
+    }
+    .chapter-celebration-label {
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .chapter-celebration-title {
+      font-size: 24px;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    .chapter-celebration-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .chapter-celebration-button {
+      justify-self: start;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 14px;
+      background: linear-gradient(135deg, #8b2e1d, #b55a30);
+      color: #fff8ef;
+      font: inherit;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(139, 46, 29, 0.2);
+    }
+    @media (max-width: 640px) {
+      .chapter-celebration {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+      }
+    }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-3px); }
@@ -155,6 +226,83 @@ function injectExerciseStyles() {
     }
   `;
   document.head.appendChild(style);
+}
+
+function ensureChapterCelebration() {
+  if (chapterExerciseState.celebration) {
+    return chapterExerciseState.celebration;
+  }
+
+  const root = document.createElement("section");
+  root.className = "chapter-celebration";
+  root.setAttribute("aria-live", "polite");
+
+  const card = document.createElement("div");
+  card.className = "chapter-celebration-card";
+
+  const label = document.createElement("div");
+  label.className = "chapter-celebration-label";
+  label.textContent = "Chapter Complete";
+
+  const title = document.createElement("strong");
+  title.className = "chapter-celebration-title";
+
+  const copy = document.createElement("p");
+  copy.className = "chapter-celebration-copy";
+  copy.textContent = "本章填空已全部完成，可以继续往下读了。";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "chapter-celebration-button";
+  button.textContent = "继续阅读";
+  button.addEventListener("click", () => {
+    hideChapterCelebration();
+  });
+
+  card.appendChild(label);
+  card.appendChild(title);
+  card.appendChild(copy);
+  card.appendChild(button);
+  root.appendChild(card);
+  document.body.appendChild(root);
+
+  chapterExerciseState.celebration = { root, title };
+  return chapterExerciseState.celebration;
+}
+
+function hideChapterCelebration() {
+  if (chapterExerciseState.celebrationTimer) {
+    window.clearTimeout(chapterExerciseState.celebrationTimer);
+    chapterExerciseState.celebrationTimer = null;
+  }
+  if (chapterExerciseState.celebration) {
+    chapterExerciseState.celebration.root.classList.remove("is-visible");
+  }
+}
+
+function showChapterCelebration(total) {
+  const celebration = ensureChapterCelebration();
+  hideChapterCelebration();
+  celebration.title.textContent = `你已熟悉了 ${total} 个表达`;
+  celebration.root.classList.add("is-visible");
+  chapterExerciseState.celebrationTimer = window.setTimeout(() => {
+    hideChapterCelebration();
+  }, 4800);
+}
+
+function syncChapterCompletion() {
+  chapterExerciseState.completed = chapterExerciseState.paneStates.reduce((sum, paneState) => {
+    return sum + paneState.completedCount;
+  }, 0);
+
+  if (
+    !chapterExerciseState.celebrationShown &&
+    chapterExerciseState.total > 0 &&
+    chapterExerciseState.completed === chapterExerciseState.total
+  ) {
+    chapterExerciseState.celebrationShown = true;
+    showChapterCelebration(chapterExerciseState.total);
+  }
 }
 
 function wireOriginalToggle() {
@@ -448,8 +596,7 @@ function wirePronunciation() {
 function buildExercisePanes() {
   paragraphCards.forEach((card) => {
     const processed = card.querySelector(".processed");
-    const original = card.querySelector(".original");
-    if (!processed || !original) {
+    if (!processed) {
       return;
     }
 
@@ -493,67 +640,38 @@ function buildExercisePanes() {
       termIndex,
     }));
     const terms = [];
-
-    const originalText = original.textContent || "";
-    let cursor = 0;
-
-    function candidatePrompts(term) {
-      const prompts = [];
-      if (term.prompt) {
-        prompts.push(term.prompt);
-        const shortened = term.prompt.split(/[，。,；：！？,.!?]/)[0].trim();
-        if (shortened && shortened !== term.prompt) {
-          prompts.push(shortened);
-        }
-        if (term.prompt.endsWith("的") && term.prompt.length > 1) {
-          prompts.push(term.prompt.slice(0, -1));
-        }
-      }
-      if (term.answer) {
-        prompts.push(term.answer);
-      }
-      return prompts.filter((value, index, list) => value && list.indexOf(value) === index);
-    }
-
-    vocabSpecs.forEach((term) => {
-      const prompts = candidatePrompts(term);
-      let matchIndex = -1;
-      let matchedPrompt = term.prompt || term.answer;
-
-      for (const prompt of prompts) {
-        const foundIndex = originalText.indexOf(prompt, cursor);
-        if (foundIndex !== -1) {
-          matchIndex = foundIndex;
-          matchedPrompt = prompt;
-          break;
-        }
-      }
-
-      if (matchIndex === -1) {
+    processed.childNodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        sentence.appendChild(document.createTextNode(node.textContent || ""));
         return;
       }
-
-      sentence.appendChild(document.createTextNode(originalText.slice(cursor, matchIndex)));
-      const blank = document.createElement("button");
-      blank.type = "button";
-      blank.className = "exercise-blank";
-      blank.dataset.answer = term.answer;
-      blank.dataset.audio = term.audio;
-      blank.dataset.prompt = matchedPrompt;
-      blank.dataset.termIndex = String(term.termIndex);
-      blank.textContent = matchedPrompt;
-      sentence.appendChild(blank);
-      terms.push(term);
-      cursor = matchIndex + matchedPrompt.length;
+      if (node.nodeType === Node.ELEMENT_NODE && node.classList && node.classList.contains("vocab")) {
+        const term = vocabSpecs[terms.length];
+        if (!term) {
+          return;
+        }
+        const prompt = term.prompt || term.answer || "填入英文";
+        const blank = document.createElement("button");
+        blank.type = "button";
+        blank.className = "exercise-blank";
+        blank.dataset.answer = term.answer;
+        blank.dataset.audio = term.audio;
+        blank.dataset.prompt = prompt;
+        blank.dataset.termIndex = String(term.termIndex);
+        blank.textContent = prompt;
+        sentence.appendChild(blank);
+        terms.push(term);
+        return;
+      }
+      sentence.appendChild(document.createTextNode(node.textContent || ""));
     });
-
-    sentence.appendChild(document.createTextNode(originalText.slice(cursor)));
 
     const state = {
       selectedToken: null,
       blanks: [],
       tokens: [],
       statusTimer: null,
+      completedCount: 0,
     };
 
     function clearSelection() {
@@ -574,6 +692,7 @@ function buildExercisePanes() {
     function updateStatus() {
       clearStatusTimer();
       const completed = state.blanks.filter((blank) => blank.classList.contains("is-correct")).length;
+      state.completedCount = completed;
       status.classList.remove("is-error");
       if (completed === state.blanks.length) {
         status.textContent = `本段完成 ${completed}/${state.blanks.length}`;
@@ -582,6 +701,7 @@ function buildExercisePanes() {
         status.textContent = `已完成 ${completed}/${state.blanks.length}`;
         status.classList.remove("is-complete");
       }
+      syncChapterCompletion();
     }
 
     function showErrorStatus(message) {
@@ -673,6 +793,8 @@ function buildExercisePanes() {
     }
 
     state.blanks = Array.from(sentence.querySelectorAll(".exercise-blank"));
+    chapterExerciseState.total += state.blanks.length;
+    chapterExerciseState.paneStates.push(state);
     state.blanks.forEach((blank) => {
       blank.addEventListener("click", () => {
         if (!state.selectedToken) {
