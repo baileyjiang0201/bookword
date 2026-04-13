@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>书词间 · 中英混读</title>
+  <title>小说选择 · 中英混读</title>
   <style>
     :root {
       --bg: #efe6d8;
@@ -44,36 +44,31 @@
     }
 
     .hero {
-      padding: 34px 36px;
+      padding: 30px 32px;
       display: grid;
-      gap: 22px;
+      gap: 18px;
     }
 
-    .brand {
-      display: grid;
-      gap: 10px;
-    }
-
-    .brand-name {
+    .eyebrow {
       margin: 0;
-      font-size: clamp(40px, 7vw, 78px);
-      line-height: 0.92;
-      letter-spacing: 0.08em;
       color: var(--accent);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
     }
 
-    .brand-slogan {
+    h1 {
       margin: 0;
-      color: var(--muted);
-      font-size: clamp(16px, 2.4vw, 22px);
-      line-height: 1.7;
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 0.98;
+      max-width: 10ch;
     }
 
     .summary {
       margin: 0;
-      max-width: 46rem;
-      font-size: 17px;
-      line-height: 1.9;
+      max-width: 54rem;
+      font-size: 16px;
+      line-height: 1.85;
       color: var(--muted);
     }
 
@@ -136,8 +131,15 @@
 
     .action-row {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
+    }
+
+    .selection-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
     }
 
     .books {
@@ -179,34 +181,12 @@
       text-transform: uppercase;
     }
 
-    .book-meta strong {
-      color: var(--ink);
-      font-size: 12px;
-      letter-spacing: 0.06em;
-    }
-
     .book-title {
       font-size: 24px;
       line-height: 1.15;
     }
 
-    .book-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .book-tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(139, 46, 29, 0.08);
-      color: var(--accent);
-      font-size: 12px;
-      line-height: 1;
-    }
-
+    .book-subtitle,
     .book-stats {
       color: var(--muted);
       font-size: 14px;
@@ -235,177 +215,127 @@
 <body>
   <main class="shell">
     <section class="hero">
-      <div class="brand">
-        <p class="brand-name">书词间</p>
-        <p class="brand-slogan">读小说顺便背个单词。</p>
-      </div>
-      <p class="summary">都市、悬疑、职场、甜文，都可以边读故事边熟悉英文表达。</p>
+      <h1>书词间</h1>
+      <p class="summary">读小说轻松积累词汇量。</p>
       <div class="picker">
         <div class="field">
-          <label for="channelSelect">频道</label>
-          <select id="channelSelect"></select>
+          <label for="novelSelect">作品</label>
+          <select id="novelSelect"></select>
         </div>
         <div class="field">
-          <label for="novelSelect">小说</label>
-          <select id="novelSelect"></select>
+          <label for="chapterSelect">章节</label>
+          <select id="chapterSelect"></select>
         </div>
         <div class="field actions">
           <label>&nbsp;</label>
-          <button id="openBook" type="button">进入小说</button>
+          <div class="action-row">
+            <button id="openChapter" type="button">开始阅读</button>
+          </div>
         </div>
       </div>
+      <p class="selection-hint" id="selectionHint"></p>
     </section>
 
     <section class="books">
-      <h2 id="booksHeading">小说目录</h2>
-      <div class="book-grid" id="bookGrid"></div>
+      <h2>作品目录</h2>
+      <div class="book-grid">
+        <a class="book-card" href="books/05-既定边界-原创样章/index.html"><span class="book-meta">Original</span><strong class="book-title">《既定边界》</strong><span class="book-subtitle">原创样章 · 5 章</span><span class="book-stats">5 章 · 示例章 第一章 失控边界</span></a><a class="book-card" href="books/06-静默协议-原创样章/index.html"><span class="book-meta">Original</span><strong class="book-title">《静默协议》</strong><span class="book-subtitle">原创样章 · 12 章</span><span class="book-stats">12 章 · 示例章 第一章 断线地铁</span></a><a class="book-card" href="books/07-第二顺位-原创样章/index.html"><span class="book-meta">Original</span><strong class="book-title">《第二顺位》</strong><span class="book-subtitle">原创样章 · 10 章</span><span class="book-stats">10 章 · 示例章 第一章 临时接盘</span></a><a class="book-card" href="books/08-今日宜同居-原创样章/index.html"><span class="book-meta">Original</span><strong class="book-title">《今日宜同居》</strong><span class="book-subtitle">原创样章 · 5 章</span><span class="book-stats">5 章 · 示例章 第一章 协议结婚</span></a><a class="book-card" href="books/09-同频失眠-原创样章/index.html"><span class="book-meta">Original</span><strong class="book-title">《同频失眠》</strong><span class="book-subtitle">原创样章 · 5 章</span><span class="book-stats">5 章 · 示例章 第一章 临时救场</span></a>
+      </div>
     </section>
   </main>
 
   <script>
-    const library = [{"slug": "05-既定边界-原创样章", "title": "《既定边界》", "author": "原创", "epub": "完整短篇", "home_url": "books/05-既定边界-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-失控边界", "title": "第一章 失控边界", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/001-第一章-失控边界.html"}, {"id": 2, "slug": "002-第二章-早餐会", "title": "第二章 早餐会", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/002-第二章-早餐会.html"}, {"id": 3, "slug": "003-第三章-条款之外", "title": "第三章 条款之外", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/003-第三章-条款之外.html"}, {"id": 4, "slug": "004-第四章-暴雨预案", "title": "第四章 暴雨预案", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/004-第四章-暴雨预案.html"}, {"id": 5, "slug": "005-第五章-既定边界", "title": "第五章 既定边界", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/005-第五章-既定边界.html"}], "chapters_total": 5, "showcase": {"title": "第一章 失控边界", "url": "books/05-既定边界-原创样章/chapters/001-第一章-失控边界.html", "density": 5.93}}, {"slug": "06-静默协议-原创样章", "title": "《静默协议》", "author": "原创样章", "epub": "原创连载", "home_url": "books/06-静默协议-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-断线地铁", "title": "第一章 断线地铁", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/001-第一章-断线地铁.html"}, {"id": 2, "slug": "002-第二章-不存在的乘客", "title": "第二章 不存在的乘客", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/002-第二章-不存在的乘客.html"}, {"id": 3, "slug": "003-第三章-静默协议", "title": "第三章 静默协议", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/003-第三章-静默协议.html"}, {"id": 4, "slug": "004-第四章-灰名单", "title": "第四章 灰名单", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/004-第四章-灰名单.html"}, {"id": 5, "slug": "005-第五章-第一个覆写", "title": "第五章 第一个覆写", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/005-第五章-第一个覆写.html"}, {"id": 6, "slug": "006-第六章-审计风暴", "title": "第六章 审计风暴", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/006-第六章-审计风暴.html"}, {"id": 7, "slug": "007-第七章-白盒会议", "title": "第七章 白盒会议", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/007-第七章-白盒会议.html"}, {"id": 8, "slug": "008-第八章-静默链路", "title": "第八章 静默链路", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/008-第八章-静默链路.html"}, {"id": 9, "slug": "009-第九章-双重授权", "title": "第九章 双重授权", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/009-第九章-双重授权.html"}, {"id": 10, "slug": "010-第十章-峰会前夜", "title": "第十章 峰会前夜", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/010-第十章-峰会前夜.html"}, {"id": 11, "slug": "011-第十一章-城市失真", "title": "第十一章 城市失真", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/011-第十一章-城市失真.html"}, {"id": 12, "slug": "012-第十二章-回声归档", "title": "第十二章 回声归档", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/012-第十二章-回声归档.html"}], "chapters_total": 12, "showcase": {"title": "第一章 断线地铁", "url": "books/06-静默协议-原创样章/chapters/001-第一章-断线地铁.html", "density": 6.14}}, {"slug": "07-第二顺位-原创样章", "title": "《第二顺位》", "author": "原创样章", "epub": "原创连载", "home_url": "books/07-第二顺位-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-临时接盘", "title": "第一章 临时接盘", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/001-第一章-临时接盘.html"}, {"id": 2, "slug": "002-第二章-风险敞口", "title": "第二章 风险敞口", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/002-第二章-风险敞口.html"}, {"id": 3, "slug": "003-第三章-第二顺位", "title": "第三章 第二顺位", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/003-第三章-第二顺位.html"}, {"id": 4, "slug": "004-第四章-交叉持压", "title": "第四章 交叉持压", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/004-第四章-交叉持压.html"}, {"id": 5, "slug": "005-第五章-不做陪跑", "title": "第五章 不做陪跑", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/005-第五章-不做陪跑.html"}, {"id": 6, "slug": "006-第六章-暗池交易", "title": "第六章 暗池交易", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/006-第六章-暗池交易.html"}, {"id": 7, "slug": "007-第七章-控制权窗口", "title": "第七章 控制权窗口", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/007-第七章-控制权窗口.html"}, {"id": 8, "slug": "008-第八章-追责清单", "title": "第八章 追责清单", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/008-第八章-追责清单.html"}, {"id": 9, "slug": "009-第九章-正式落地", "title": "第九章 正式落地", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/009-第九章-正式落地.html"}, {"id": 10, "slug": "010-第十章-第一顺位", "title": "第十章 第一顺位", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/010-第十章-第一顺位.html"}], "chapters_total": 10, "showcase": {"title": "第一章 临时接盘", "url": "books/07-第二顺位-原创样章/chapters/001-第一章-临时接盘.html", "density": 5.95}}, {"slug": "08-今日宜同居-原创样章", "title": "《今日宜同居》", "author": "原创样章", "epub": "原创连载", "home_url": "books/08-今日宜同居-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-协议结婚", "title": "第一章 协议结婚", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/001-第一章-协议结婚.html"}, {"id": 2, "slug": "002-第二章-同居守则", "title": "第二章 同居守则", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/002-第二章-同居守则.html"}, {"id": 3, "slug": "003-第三章-关系-soft-launch", "title": "第三章 关系 Soft Launch", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/003-第三章-关系-soft-launch.html"}, {"id": 4, "slug": "004-第四章-默认偏爱", "title": "第四章 默认偏爱", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/004-第四章-默认偏爱.html"}, {"id": 5, "slug": "005-第五章-恋爱转正", "title": "第五章 恋爱转正", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/005-第五章-恋爱转正.html"}], "chapters_total": 5, "showcase": {"title": "第一章 协议结婚", "url": "books/08-今日宜同居-原创样章/chapters/001-第一章-协议结婚.html", "density": 5.93}}, {"slug": "09-同频失眠-原创样章", "title": "《同频失眠》", "author": "原创样章", "epub": "原创连载", "home_url": "books/09-同频失眠-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-临时合租", "title": "第一章 临时救场", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/001-第一章-临时合租.html"}, {"id": 2, "slug": "002-第二章-深夜厨房", "title": "第二章 凌晨录音棚", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/002-第二章-深夜厨房.html"}, {"id": 3, "slug": "003-第三章-同频失眠", "title": "第三章 同频失眠", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/003-第三章-同频失眠.html"}, {"id": 4, "slug": "004-第四章-旧稿回声", "title": "第四章 废稿回带", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/004-第四章-旧稿回声.html"}, {"id": 5, "slug": "005-第五章-凌晨两点", "title": "第五章 零点首发", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/005-第五章-凌晨两点.html"}], "chapters_total": 5, "showcase": {"title": "第一章 临时救场", "url": "books/09-同频失眠-原创样章/chapters/001-第一章-临时合租.html", "density": 5.97}}];
-    const channelConfig = [
-      { id: "male", label: "男频" },
-      { id: "female", label: "女频" },
-    ];
-    const channelMap = {
-      "05-既定边界-原创样章": "female",
-      "06-静默协议-原创样章": "male",
-      "07-第二顺位-原创样章": "female",
-      "08-今日宜同居-原创样章": "female",
-      "09-同频失眠-原创样章": "female",
-    };
-    const tagMap = {
-      "05-既定边界-原创样章": [
-            "都市",
-            "久别重逢",
-            "职场"
-      ],
-      "06-静默协议-原创样章": [
-            "科幻",
-            "悬疑",
-            "规则流"
-      ],
-      "07-第二顺位-原创样章": [
-            "都市",
-            "商战",
-            "情感拉扯"
-      ],
-      "08-今日宜同居-原创样章": [
-            "都市",
-            "同居",
-            "甜文"
-      ],
-      "09-同频失眠-原创样章": [
-            "都市",
-            "重逢",
-            "播客"
-      ]
-};
-    const books = library.map((book) => ({
-      ...book,
-      channel: channelMap[book.slug] || "female",
-      tags: tagMap[book.slug] || [],
-    }));
-    const channelSelect = document.getElementById("channelSelect");
+    const library = [{"slug": "05-既定边界-原创样章", "title": "《既定边界》", "author": "原创样章", "epub": "原创连载", "home_url": "books/05-既定边界-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-失控边界", "title": "第一章 失控边界", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/001-第一章-失控边界.html"}, {"id": 2, "slug": "002-第二章-早餐会", "title": "第二章 早餐会", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/002-第二章-早餐会.html"}, {"id": 3, "slug": "003-第三章-条款之外", "title": "第三章 条款之外", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/003-第三章-条款之外.html"}, {"id": 4, "slug": "004-第四章-暴雨预案", "title": "第四章 暴雨预案", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/004-第四章-暴雨预案.html"}, {"id": 5, "slug": "005-第五章-既定边界", "title": "第五章 既定边界", "part": "正文", "url": "books/05-既定边界-原创样章/chapters/005-第五章-既定边界.html"}], "chapters_total": 5, "showcase": {"title": "第一章 失控边界", "url": "books/05-既定边界-原创样章/chapters/001-第一章-失控边界.html", "density": 6.85}}, {"slug": "06-静默协议-原创样章", "title": "《静默协议》", "author": "原创样章", "epub": "原创连载", "home_url": "books/06-静默协议-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-断线地铁", "title": "第一章 断线地铁", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/001-第一章-断线地铁.html"}, {"id": 2, "slug": "002-第二章-不存在的乘客", "title": "第二章 不存在的乘客", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/002-第二章-不存在的乘客.html"}, {"id": 3, "slug": "003-第三章-静默协议", "title": "第三章 静默协议", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/003-第三章-静默协议.html"}, {"id": 4, "slug": "004-第四章-灰名单", "title": "第四章 灰名单", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/004-第四章-灰名单.html"}, {"id": 5, "slug": "005-第五章-第一个覆写", "title": "第五章 第一个覆写", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/005-第五章-第一个覆写.html"}, {"id": 6, "slug": "006-第六章-审计风暴", "title": "第六章 审计风暴", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/006-第六章-审计风暴.html"}, {"id": 7, "slug": "007-第七章-白盒会议", "title": "第七章 白盒会议", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/007-第七章-白盒会议.html"}, {"id": 8, "slug": "008-第八章-静默链路", "title": "第八章 静默链路", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/008-第八章-静默链路.html"}, {"id": 9, "slug": "009-第九章-双重授权", "title": "第九章 双重授权", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/009-第九章-双重授权.html"}, {"id": 10, "slug": "010-第十章-峰会前夜", "title": "第十章 峰会前夜", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/010-第十章-峰会前夜.html"}, {"id": 11, "slug": "011-第十一章-城市失真", "title": "第十一章 城市失真", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/011-第十一章-城市失真.html"}, {"id": 12, "slug": "012-第十二章-回声归档", "title": "第十二章 回声归档", "part": "正文", "url": "books/06-静默协议-原创样章/chapters/012-第十二章-回声归档.html"}], "chapters_total": 12, "showcase": {"title": "第一章 断线地铁", "url": "books/06-静默协议-原创样章/chapters/001-第一章-断线地铁.html", "density": 6.48}}, {"slug": "07-第二顺位-原创样章", "title": "《第二顺位》", "author": "原创样章", "epub": "原创连载", "home_url": "books/07-第二顺位-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-临时接盘", "title": "第一章 临时接盘", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/001-第一章-临时接盘.html"}, {"id": 2, "slug": "002-第二章-风险敞口", "title": "第二章 风险敞口", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/002-第二章-风险敞口.html"}, {"id": 3, "slug": "003-第三章-第二顺位", "title": "第三章 第二顺位", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/003-第三章-第二顺位.html"}, {"id": 4, "slug": "004-第四章-交叉持压", "title": "第四章 交叉持压", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/004-第四章-交叉持压.html"}, {"id": 5, "slug": "005-第五章-不做陪跑", "title": "第五章 不做陪跑", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/005-第五章-不做陪跑.html"}, {"id": 6, "slug": "006-第六章-暗池交易", "title": "第六章 暗池交易", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/006-第六章-暗池交易.html"}, {"id": 7, "slug": "007-第七章-控制权窗口", "title": "第七章 控制权窗口", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/007-第七章-控制权窗口.html"}, {"id": 8, "slug": "008-第八章-追责清单", "title": "第八章 追责清单", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/008-第八章-追责清单.html"}, {"id": 9, "slug": "009-第九章-正式落地", "title": "第九章 正式落地", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/009-第九章-正式落地.html"}, {"id": 10, "slug": "010-第十章-第一顺位", "title": "第十章 第一顺位", "part": "正文", "url": "books/07-第二顺位-原创样章/chapters/010-第十章-第一顺位.html"}], "chapters_total": 10, "showcase": {"title": "第一章 临时接盘", "url": "books/07-第二顺位-原创样章/chapters/001-第一章-临时接盘.html", "density": 9.18}}, {"slug": "08-今日宜同居-原创样章", "title": "《今日宜同居》", "author": "原创样章", "epub": "原创连载", "home_url": "books/08-今日宜同居-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-协议结婚", "title": "第一章 协议结婚", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/001-第一章-协议结婚.html"}, {"id": 2, "slug": "002-第二章-同居守则", "title": "第二章 同居守则", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/002-第二章-同居守则.html"}, {"id": 3, "slug": "003-第三章-关系-soft-launch", "title": "第三章 关系 Soft Launch", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/003-第三章-关系-soft-launch.html"}, {"id": 4, "slug": "004-第四章-默认偏爱", "title": "第四章 默认偏爱", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/004-第四章-默认偏爱.html"}, {"id": 5, "slug": "005-第五章-恋爱转正", "title": "第五章 恋爱转正", "part": "正文", "url": "books/08-今日宜同居-原创样章/chapters/005-第五章-恋爱转正.html"}], "chapters_total": 5, "showcase": {"title": "第一章 协议结婚", "url": "books/08-今日宜同居-原创样章/chapters/001-第一章-协议结婚.html", "density": 8.74}}, {"slug": "09-同频失眠-原创样章", "title": "《同频失眠》", "author": "原创样章", "epub": "原创连载", "home_url": "books/09-同频失眠-原创样章/index.html", "chapters": [{"id": 1, "slug": "001-第一章-临时合租", "title": "第一章 临时救场", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/001-第一章-临时合租.html"}, {"id": 2, "slug": "002-第二章-深夜厨房", "title": "第二章 凌晨录音棚", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/002-第二章-深夜厨房.html"}, {"id": 3, "slug": "003-第三章-同频失眠", "title": "第三章 同频失眠", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/003-第三章-同频失眠.html"}, {"id": 4, "slug": "004-第四章-旧稿回声", "title": "第四章 废稿回带", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/004-第四章-旧稿回声.html"}, {"id": 5, "slug": "005-第五章-凌晨两点", "title": "第五章 零点首发", "part": "正文", "url": "books/09-同频失眠-原创样章/chapters/005-第五章-凌晨两点.html"}], "chapters_total": 5, "showcase": {"title": "第一章 临时救场", "url": "books/09-同频失眠-原创样章/chapters/001-第一章-临时合租.html", "density": 18.52}}];
     const novelSelect = document.getElementById("novelSelect");
-    const openBook = document.getElementById("openBook");
-    const bookGrid = document.getElementById("bookGrid");
-    const booksHeading = document.getElementById("booksHeading");
+    const chapterSelect = document.getElementById("chapterSelect");
+    const openChapter = document.getElementById("openChapter");
+    const selectionHint = document.getElementById("selectionHint");
 
-    function booksInChannel(channelId) {
-      return books.filter((book) => book.channel === channelId);
+    function renderNovelOptions(selectedIndex = 0) {
+      novelSelect.innerHTML = library.map((book, index) =>
+        `<option value="${index}">${book.title}</option>`
+      ).join("");
+      novelSelect.value = String(selectedIndex);
     }
 
-    function channelLabel(channelId) {
-      return channelConfig.find((channel) => channel.id === channelId)?.label || "女频";
-    }
-
-    function currentChannel() {
-      return channelSelect.value || "female";
-    }
-
-    function currentBooks() {
-      return booksInChannel(currentChannel());
+    function formatChapterLabel(chapter) {
+      return `${chapter.part || "正文"} · ${chapter.title}`;
     }
 
     function currentBook() {
-      return currentBooks().find((book) => book.slug === novelSelect.value) || currentBooks()[0] || null;
+      return library[Number(novelSelect.value)] || library[0];
     }
 
-    function renderChannelOptions(selectedChannel = "female") {
-      channelSelect.innerHTML = channelConfig.map((channel) =>
-        `<option value="${channel.id}">${channel.label}</option>`
-      ).join("");
-      channelSelect.value = selectedChannel;
-    }
-
-    function renderNovelOptions(selectedSlug = "") {
-      const items = currentBooks();
-      novelSelect.innerHTML = items.map((book) =>
-        `<option value="${book.slug}">${book.title}</option>`
-      ).join("");
-      const selectedBook = items.find((book) => book.slug === selectedSlug) || items[0] || null;
-      novelSelect.value = selectedBook ? selectedBook.slug : "";
-      novelSelect.disabled = !selectedBook;
-      openBook.disabled = !selectedBook;
-    }
-
-    function renderBookGrid() {
-      const items = currentBooks();
-      const label = channelLabel(currentChannel());
-      booksHeading.textContent = `${label}书单`;
-      bookGrid.innerHTML = items.map((book) =>
-        `<a class="book-card" href="${book.home_url}">
-          <span class="book-meta"><strong>${label}</strong> · Novel</span>
-          <strong class="book-title">${book.title}</strong>
-          <span class="book-tags">${book.tags.map((tag) => `<span class="book-tag">${tag}</span>`).join("")}</span>
-          <span class="book-stats">${book.chapters_total} 章 · 示例章 ${book.showcase?.title || "待补充"}</span>
-        </a>`
-      ).join("");
+    function currentChapter(book) {
+      return book.chapters.find((chapter) => chapter.url === chapterSelect.value) || book.chapters[0] || null;
     }
 
     function syncLocation() {
-      const url = new URL(window.location.href);
       const book = currentBook();
-      url.searchParams.set("channel", currentChannel());
-      if (book) {
-        url.searchParams.set("book", book.slug);
+      const chapter = currentChapter(book);
+      const url = new URL(window.location.href);
+      url.searchParams.set("book", book.slug);
+      if (chapter) {
+        url.searchParams.set("chapter", chapter.slug);
       } else {
-        url.searchParams.delete("book");
+        url.searchParams.delete("chapter");
       }
-      url.searchParams.delete("chapter");
-      history.replaceState(null, "", url.pathname + url.search);
+      history.replaceState(null, "", url);
     }
 
-    channelSelect.addEventListener("change", () => {
-      renderNovelOptions();
-      renderBookGrid();
-      syncLocation();
-    });
+    function updateHint() {
+      const book = currentBook();
+      const chapter = currentChapter(book);
+      if (!chapter) {
+        selectionHint.textContent = `${book.title} · 暂无可读章节`;
+        return;
+      }
+      const author = book.author ? ` · ${book.author}` : "";
+      selectionHint.textContent = `${book.title}${author} · ${chapter.part || "正文"} · ${chapter.title}`;
+    }
+
+    function renderChapterOptions(bookIndex, preferredChapterSlug = "") {
+      const book = library[bookIndex];
+      chapterSelect.innerHTML = book.chapters.map((chapter) =>
+        `<option value="${chapter.url}">${formatChapterLabel(chapter)}</option>`
+      ).join("");
+      const preferred = book.chapters.find((chapter) => chapter.slug === preferredChapterSlug) || book.chapters[0] || null;
+      if (preferred) {
+        chapterSelect.value = preferred.url;
+      }
+      const disabled = !preferred;
+      chapterSelect.disabled = disabled;
+      openChapter.disabled = disabled;
+    }
 
     novelSelect.addEventListener("change", () => {
+      renderChapterOptions(Number(novelSelect.value));
+      updateHint();
       syncLocation();
     });
 
-    openBook.addEventListener("click", () => {
-      const book = currentBook();
-      if (book && book.home_url) {
-        window.location.href = book.home_url;
+    chapterSelect.addEventListener("change", () => {
+      updateHint();
+      syncLocation();
+    });
+
+    openChapter.addEventListener("click", () => {
+      if (chapterSelect.value) {
+        window.location.href = chapterSelect.value;
       }
     });
 
     const params = new URLSearchParams(window.location.search);
-    const requestedChannel = params.get("channel");
-    const requestedBookSlug = params.get("book") || "";
-    const initialChannel = channelConfig.some((channel) => channel.id === requestedChannel)
-      ? requestedChannel
-      : (books.find((book) => book.slug === requestedBookSlug)?.channel || "female");
+    const initialBookIndex = Math.max(
+      library.findIndex((book) => book.slug === params.get("book")),
+      0
+    );
 
-    renderChannelOptions(initialChannel);
-    renderNovelOptions(requestedBookSlug);
-    renderBookGrid();
+    renderNovelOptions(initialBookIndex);
+    renderChapterOptions(initialBookIndex, params.get("chapter") || "");
+    updateHint();
     syncLocation();
   </script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0101411660834a09a61843791f5ec801"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
