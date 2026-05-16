@@ -25,6 +25,8 @@ wireOriginalToggle();
 wirePronunciation();
 buildExercisePanes();
 wireExerciseToggle();
+wireLexiconSearch();
+wireVocabLexiconSync();
 
 function injectExerciseStyles() {
   const style = document.createElement("style");
@@ -692,3 +694,72 @@ function wireExerciseToggle() {
       : "练习模式";
   });
 }
+function normalizeLexiconTerm(text) {
+  return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function lexiconItems() {
+  return Array.from(document.querySelectorAll(".lexicon-item"));
+}
+
+function wireLexiconSearch() {
+  const search = document.querySelector(".vocab-search");
+  if (!search) return;
+  const items = lexiconItems();
+  let empty = document.querySelector(".lexicon-empty");
+  if (!empty) {
+    empty = document.createElement("p");
+    empty.className = "lexicon-empty";
+    empty.textContent = "没有匹配的词汇，换个关键词试试。";
+    const lexicon = document.querySelector(".lexicon");
+    if (lexicon && lexicon.parentNode) lexicon.parentNode.insertBefore(empty, lexicon.nextSibling);
+  }
+  search.addEventListener("input", () => {
+    const query = normalizeLexiconTerm(search.value);
+    let visible = 0;
+    items.forEach((item) => {
+      const haystack = normalizeLexiconTerm(item.textContent);
+      const matched = !query || haystack.includes(query);
+      item.hidden = !matched;
+      if (matched) visible += 1;
+    });
+    empty.classList.toggle("is-visible", visible === 0);
+  });
+}
+
+function setLinkedTerm(term, options = {}) {
+  const normalized = normalizeLexiconTerm(term);
+  if (!normalized) return;
+  const items = lexiconItems();
+  vocabNodes.forEach((node) => {
+    const nodeTerm = normalizeLexiconTerm(node.dataset.en || node.textContent);
+    node.classList.toggle("is-linked", nodeTerm === normalized);
+  });
+  items.forEach((item) => {
+    const itemTerm = normalizeLexiconTerm(item.querySelector(".lexicon-en")?.textContent || item.textContent);
+    const active = itemTerm === normalized;
+    item.classList.toggle("is-active", active);
+    if (active && options.scrollLexicon) item.scrollIntoView({block: "nearest", behavior: "smooth"});
+  });
+}
+
+function wireVocabLexiconSync() {
+  const items = lexiconItems();
+  vocabNodes.forEach((node) => {
+    const term = node.dataset.en || node.textContent;
+    node.addEventListener("mouseenter", () => setLinkedTerm(term, {scrollLexicon: true}));
+    node.addEventListener("focus", () => setLinkedTerm(term, {scrollLexicon: true}));
+    node.addEventListener("click", () => setLinkedTerm(term, {scrollLexicon: true}));
+  });
+  items.forEach((item) => {
+    const term = item.querySelector(".lexicon-en")?.textContent || "";
+    item.addEventListener("mouseenter", () => setLinkedTerm(term));
+    item.addEventListener("click", () => {
+      setLinkedTerm(term);
+      const normalized = normalizeLexiconTerm(term);
+      const node = vocabNodes.find((vocab) => normalizeLexiconTerm(vocab.dataset.en || vocab.textContent) === normalized);
+      if (node) node.scrollIntoView({block: "center", behavior: "smooth"});
+    });
+  });
+}
+
